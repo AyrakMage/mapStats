@@ -49,13 +49,15 @@ const HomePage = () => {
 
   const navigation = useNavigation();
   const debouncedHandleStateClick = useCallback(
-    debounce((stateID) => {
+    debounce((stateID, stateName) => {
       const state = INDIAN_STATES.find(state => state.id === stateID);
-      if (state) {
-        Alert.alert(`Clicked on state: ${state.name}`);
+      if (!state) {
+        Alert.alert(`No Data Available for ${state.name}`);
+        return;
       }
       navigation.navigate("StateDetails", {
         stateID,
+        stateName:  state.name,
       });
     }, 200),
     []
