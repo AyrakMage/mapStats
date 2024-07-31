@@ -60,12 +60,12 @@ const SelectStatsView = ({ onClose, stats, onShare, stateID, stateName }) => {
             }}
           />
           <View style={styles.buttonContainer}>
-            <Button color={COLORS.primary} title="Close" onPress={onClose} />
-            <Button color={COLORS.primary} title="Share" onPress={handleShare} />
+            <Button borderRadius = {BORDER_RADIUS.medium} color={COLORS.primary} title="Close" onPress={onClose} />
+            <Button borderRadius = {BORDER_RADIUS.medium} color={COLORS.primary} title="Share" onPress={handleShare} />
           </View>
         </View>
         <ViewShot style={{position:'absolute', justifyContent: 'center', left: 1000}} ref={captureRef} options={{ fileName: stateID + "data", format: "jpg", quality: 0.9 }} >
-          <View style = {{flex:1, backgroundColor:COLORS.white}}>
+          <View style = {{flex:1, backgroundColor:COLORS.white, padding: SPACING.medium}}>
               <Text style={styles.printTitle}>
                   {stateName}
               </Text>
