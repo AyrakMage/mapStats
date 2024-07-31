@@ -1,13 +1,16 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Button, Touchable, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Button, TouchableOpacity, Alert } from 'react-native';
 import CheckBox from 'expo-checkbox';
 import ViewShot from 'react-native-view-shot'
 import DetailView from './detailView';
 import * as Sharing from 'expo-sharing';
-const SelectStatsView = ({ onClose, properties, onShare, stateID, stateName }) => {
+import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from '../../../constants';
+
+const SelectStatsView = ({ onClose, stats, onShare, stateID, stateName }) => {
   const [selectedProperties, setSelectedProperties] = useState([]); 
-  const ref = useRef();
-    console.log("satte", stateName);
+  // store ref to the view to capture after selection of properties/stats.
+  const captureRef = useRef();
+
   const handleSelectProperty = (key) => {
     setSelectedProperties((prevSelected) => {
       if (prevSelected.includes(key)) {
@@ -18,13 +21,14 @@ const SelectStatsView = ({ onClose, properties, onShare, stateID, stateName }) =
     });
   };
 
-  const selectedDetails = properties.filter((item) => {
+  const selectedDetails = stats.filter((item) => {
     return selectedProperties.includes(item.key);
   });
 
 
+  // capture view and then share the image captured.
   const handleShare = () => {
-    ref.current.capture().then(uri => {
+    captureRef.current.capture().then(uri => {
         Sharing.isAvailableAsync().then(()=>{
             Sharing.shareAsync(uri);
         }).catch(()=>{
@@ -40,7 +44,7 @@ const SelectStatsView = ({ onClose, properties, onShare, stateID, stateName }) =
         <View style={styles.modalContent}>
           <Text style={styles.modalTitle}>Select Properties to Share:</Text>
           <FlatList
-            data={properties}
+            data={stats}
             keyExtractor={(item) => item.label}
             renderItem={({ item }) => {
               const {label, key} = item;
@@ -50,19 +54,19 @@ const SelectStatsView = ({ onClose, properties, onShare, stateID, stateName }) =
                     value={selectedProperties.includes(key)}
                     onValueChange={() => handleSelectProperty(key)}
                   />
-                  <Text style={styles.propertyLabel}>{label}: {item.value}</Text>
+                  <Text style={styles.propertyLabel}>{label}</Text>
                 </TouchableOpacity>
               );
             }}
           />
-          
           <View style={styles.buttonContainer}>
-            <Button title="Close" onPress={onClose} />
-            <Button title="Share" onPress={handleShare} />
+            <Button color={COLORS.primary} title="Close" onPress={onClose} />
+            <Button color={COLORS.primary} title="Share" onPress={handleShare} />
           </View>
-            <ViewShot style={{position:'absolute', left: 1000}} ref={ref} options={{ fileName: stateID + "data", format: "jpg", quality: 0.9 }} >
-                <View style = {{flex:1, backgroundColor:'white'}}>
-                <Text>
+        </View>
+        <ViewShot style={{position:'absolute', justifyContent: 'center', left: 1000}} ref={captureRef} options={{ fileName: stateID + "data", format: "jpg", quality: 0.9 }} >
+                <View style = {{flex:1, backgroundColor:COLORS.white}}>
+                <Text style={styles.printTitle}>
                     {stateName}
                 </Text>
                 <View>
@@ -71,8 +75,7 @@ const SelectStatsView = ({ onClose, properties, onShare, stateID, stateName }) =
                     ))}
                 </View>
                 </View>
-            </ViewShot>
-        </View>
+        </ViewShot>
       </View>
   );
 };
@@ -82,32 +85,40 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent background
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', //Semi transparent
   },
   modalContent: {
     width: 300,
-    padding: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
+    padding: SPACING.large,
+    backgroundColor: COLORS.white,
+    borderRadius: BORDER_RADIUS.large,
   },
   modalTitle: {
-    fontSize: 18,
-    marginBottom: 15,
+    fontSize: FONT_SIZES.medium,
+    marginBottom: SPACING.large,
     textAlign: 'center',
+    fontWeight: 'bold',
   },
   propertyContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: SPACING.small,
   },
   propertyLabel: {
-    fontSize: 16,
-    marginLeft: 10,
+    fontSize: FONT_SIZES.small,
+    marginLeft: SPACING.small,
+    fontWeight: 'bold',
   },
   buttonContainer: {
-    marginTop: 20,
+    marginTop: SPACING.medium,
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  printTitle:{
+    fontSize: FONT_SIZES.small,
+    marginBottom: SPACING.large,
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
 
