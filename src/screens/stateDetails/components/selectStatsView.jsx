@@ -65,16 +65,16 @@ const SelectStatsView = ({ onClose, stats, onShare, stateID, stateName }) => {
           </View>
         </View>
         <ViewShot style={{position:'absolute', justifyContent: 'center', left: 1000}} ref={captureRef} options={{ fileName: stateID + "data", format: "jpg", quality: 0.9 }} >
-                <View style = {{flex:1, backgroundColor:COLORS.white}}>
-                <Text style={styles.printTitle}>
-                    {stateName}
-                </Text>
-                <View>
-                    {selectedDetails.map(item=>(
-                        <DetailView label={item.label} value={item.value} />
-                    ))}
-                </View>
-                </View>
+          <View style = {{flex:1, backgroundColor:COLORS.white}}>
+              <Text style={styles.printTitle}>
+                  {stateName}
+              </Text>
+              <View>
+                  {selectedDetails.map(item=>(
+                      <DetailView key={item.id} label={item.label} value={item.value} />
+                  ))}
+              </View>
+          </View>
         </ViewShot>
       </View>
   );
