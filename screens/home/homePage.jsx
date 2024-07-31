@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
 import { SafeAreaView, StyleSheet, View, Dimensions, Alert } from 'react-native';
 import Svg, { G, Path } from 'react-native-svg';
-import paths from '../assets/india_paths.json';
+import paths from '../../assets/india_paths.json';
 import debounce from 'lodash/debounce';
+import { useNavigation } from '@react-navigation/native';
 
 const INDIAN_STATES = [
   { "id": "IN-AN", "name": "Andaman and Nicobar Islands" },
@@ -44,14 +45,18 @@ const INDIAN_STATES = [
 ]
 
 const { width, height } = Dimensions.get('window'); // Get the screen dimensions
-const Homepage = () => {
+const HomePage = () => {
 
+  const navigation = useNavigation();
   const debouncedHandleStateClick = useCallback(
     debounce((stateID) => {
       const state = INDIAN_STATES.find(state => state.id === stateID);
       if (state) {
         Alert.alert(`Clicked on state: ${state.name}`);
       }
+      navigation.navigate("StateDetails", {
+        stateID,
+      });
     }, 200),
     []
   );
@@ -104,4 +109,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Homepage;
+export default HomePage;
